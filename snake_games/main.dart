@@ -1,3 +1,6 @@
+// This is a single page code.
+// Put this code in your flutter project /lib/main.dart
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math';
