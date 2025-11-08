@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 const Color primaryBlue = Color(0xFF1E3A8A);
 const Color secondaryBlue = Color(0xFF4C1D95);
@@ -90,6 +91,22 @@ class _AuthScreenState extends State<AuthScreen> {
 
         //Update display name
         await userCredential.user?.updateDisplayName(_nameController.text.trim());
+
+        //Save user details to Firestore
+        if (userCredential.user != null) {
+          //Get a reference to the 'users' collection
+          final userRef = FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid);
+
+          //Data to save for the new user
+          await userRef.set({
+            'uid' : userCredential.user!.uid,
+            'email' : _emailController.text.trim(),
+            'name': _nameController.text.trim(), //Stored from the sign up form
+            'account_balance': 0.0, //Default initial balance
+            'card_number_suffix': '1234', //Default for display on home screen
+          });
+        }
+
         _showSuccessSnackbar('Account created successfully!');
       }
     } on FirebaseAuthException catch (e) {
