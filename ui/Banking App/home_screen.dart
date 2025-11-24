@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'bottom_nav_bar.dart';
 
 /// 2. DESIGN CONSTANTS
 const Color primaryBlue = Color(0xFF1E3A8A);
@@ -40,10 +41,32 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    print('Navigation Item Tapped: Index $index');
+    //Handle navigation to different pages
+    switch (index) {
+      case 0: //Already on Home, just update selected index
+        setState(() {
+          _selectedIndex = index;
+        });
+        break;
+      case 1: //Navigate to account page (not create it yet)
+        setState(() {
+          _selectedIndex = index;
+        });
+        break;
+      case 2: //Navigate to qr page (qr_payment.dart)
+        Navigator.pushNamed(context, '/qr_payment');
+        break;
+      case 3: //Navigate to apply page (not create it yet)
+        setState(() {
+          _selectedIndex = index;
+        });
+        break;
+      case 4: //Navigate to more page (not create it yet)
+        setState(() {
+          _selectedIndex = index;
+        });
+        break;
+    }
   }
 
   @override
@@ -59,106 +82,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
       body: const _HomePageContent(),
 
-      bottomNavigationBar: _buildBottomNavigationBar(),
-      floatingActionButton: _buildFloatingActionButton(),
+      bottomNavigationBar: CustomBottomNavBar(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
+      ),
+
+      floatingActionButton: CustomFloatingActionButton(
+        onPressed: () => _onItemTapped(2),
+      ),
+
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       
-    );
-  }
-
-  //Bottom navigation bar
-  Widget _buildBottomNavigationBar() {
-    return Container(
-      decoration: const BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Color(0x1A000000),
-            blurRadius: 10,
-            offset: Offset(0, -2),
-          )
-        ]
-      ),
-      child: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 10,
-        color: Colors.white,
-        elevation: 0,
-        child: SizedBox(
-          height: 65,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(Icons.home, 'Home', 0),
-              _buildNavItem(Icons.wallet, 'Account', 1),
-              const SizedBox(width: 40), // Space for FAB
-              _buildNavItem(Icons.folder, 'Apply', 3),
-              _buildNavItem(Icons.more_horiz, 'More', 4),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  //Build individual navigation items
-  Widget _buildNavItem(IconData icon, String label, int index) {
-    final isSelected = _selectedIndex == index;
-    final color = isSelected ? primaryBlue : Colors.grey;
-
-    return InkWell(
-      onTap: () => _onItemTapped(index),
-      borderRadius: BorderRadius.circular(12),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: color, size: 24),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                color: color,
-                fontSize: 12,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  //Floating Action Button
-  Widget _buildFloatingActionButton() {
-    return Container(
-      width: 65,
-      height: 65,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: const LinearGradient(
-          colors: [primaryBlue, secondaryBlue],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: secondaryBlue,
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          )
-        ]
-      ),
-      child: FloatingActionButton(
-        onPressed: () => _onItemTapped(2),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        child: const Icon(
-          Icons.qr_code_scanner,
-          color: Colors.white,
-          size: 28,
-        ),
-      ),
     );
   }
 }
