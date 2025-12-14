@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'auth_screen.dart';
 import 'qr_payment.dart';
+import 'transaction_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-/// 1. APP ENTRY POINT
+/// 1. APP ENTRY POINT 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/home': (context) => const MyHomePage(),
         '/qr_payment': (context) => const QrPaymentPage(),
+        '/transactions': (context) => const TransactionPage(),
       },
     );
   }
