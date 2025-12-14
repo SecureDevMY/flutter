@@ -1,3 +1,5 @@
+//qr_payment.dart
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,6 +7,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'bottom_nav_bar.dart';
 import 'dart:convert';
+import 'transaction_receipt.dart';
 
 const Color primaryBlue = Color(0xFF1E3A8A);
 const Color secondaryBlue = Color(0xFF4C1D95);
@@ -609,7 +612,23 @@ class _PaymentConfirmationScreenState extends State<PaymentConfirmationScreen> {
       );
 
       // Return true to indicate success
-      Navigator.pop(context, true);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TransactionReceiptPage(
+            transactionId: 'TXN${DateTime.now().millisecondsSinceEpoch}_sender', 
+            type: 'debit', 
+            description: 'QR Payment to ${widget.receiverUserName}', 
+            category: 'QR Payment', 
+            amount: amount,
+            timestamp: Timestamp.now(),
+            note: _noteController.text.isNotEmpty ? _noteController.text : null,
+            recipient: widget.receiverUserName,
+          )
+        )
+      );
+
+
     } catch (e) {
       setState(() {
         _isProcessing = false;
