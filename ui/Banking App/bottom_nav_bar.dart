@@ -39,10 +39,10 @@ class CustomBottomNavBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildNavItem(Icons.home, 'Home', 0),
-              _buildNavItem(Icons.wallet, 'Account', 1),
+              _buildNavItem(Icons.bar_chart, 'Analytics', 1),
               const SizedBox(width: 40), // Space for FAB
-              _buildNavItem(Icons.folder, 'Apply', 3),
-              _buildNavItem(Icons.more_horiz, 'More', 4),
+              _buildNavItem(Icons.credit_card, 'Cards', 3),
+              _buildNavItem(Icons.person, 'Account', 4),
             ],
           ),
         ),
@@ -122,7 +122,3 @@ class CustomFloatingActionButton extends StatelessWidget {
     );
   }
 }
-
-  
-
-  
