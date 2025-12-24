@@ -89,8 +89,8 @@ class _TransactionReceiptPageState extends State<TransactionReceiptPage> {
     final isDebit = widget.type == 'debit';
     final statusColor = const Color(0xFF4CAF50);
     final amountText = '\$${widget.amount.toStringAsFixed(2)}';
-
     String formattedDate = 'Unknown date';
+    
     if (widget.timestamp != null) {
       final date = widget.timestamp!.toDate();
       formattedDate = DateFormat('MMM dd, yyyy . hh:mm a').format(date);
