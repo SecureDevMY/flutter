@@ -1,3 +1,5 @@
+//home_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -48,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
           _selectedIndex = index;
         });
         break;
-      case 1: //Navigate to account page (not create it yet)
+      case 1: //Navigate to analytics page (not create it yet)
         setState(() {
           _selectedIndex = index;
         });
@@ -56,15 +58,13 @@ class _MyHomePageState extends State<MyHomePage> {
       case 2: //Navigate to qr page (qr_payment.dart)
         Navigator.pushNamed(context, '/qr_payment');
         break;
-      case 3: //Navigate to apply page (not create it yet)
+      case 3: //Navigate to cards page (not create it yet)
         setState(() {
           _selectedIndex = index;
         });
         break;
-      case 4: //Navigate to more page (not create it yet)
-        setState(() {
-          _selectedIndex = index;
-        });
+      case 4: //Navigate to account page
+        Navigator.pushNamed(context, '/account');
         break;
     }
   }
