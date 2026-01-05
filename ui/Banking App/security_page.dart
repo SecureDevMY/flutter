@@ -1,6 +1,8 @@
 //security_page.dart
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'pin_setup_page.dart';
 
 const Color primaryBlue = Color(0xFF1E3A8A);
 const Color secondaryBlue = Color(0xFF4C1D95);
@@ -17,6 +19,56 @@ class _SecurityPageState extends State<SecurityPage> {
   bool biometricAuth = false;
   bool pinAuth = false;
   bool securityQuestions = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPinStatus();
+  }
+
+  Future<void> _loadPinStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      pinAuth = prefs.getBool('pin_enabled') ?? false;
+    });
+  }
+
+  Future<void> _handlePinToggle(bool value) async {
+    if (value) {
+      //Check if PIN already exists
+      final prefs = await SharedPreferences.getInstance();
+      final hasPin = prefs.getString('user_pin') != null;
+
+      if (hasPin) {
+        //PIN exists, just enable it
+        await prefs.setBool('pin_enabled', true);
+        setState(() {
+          pinAuth = true;
+        });
+      } else {
+        //No PIN exists, navigate to setup
+        final result = await Navigator.push(
+          context, 
+          MaterialPageRoute(
+            builder: (context) => const PinSetupPage(isChangingPin: false),
+          )
+        );
+
+        if (result == true) {
+          setState(() {
+            pinAuth = true;
+          });
+        }
+      }
+    } else {
+      //Disable PIN
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('pin_enabled', false);
+      setState(() {
+        pinAuth = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,12 +160,26 @@ class _SecurityPageState extends State<SecurityPage> {
             subtitle: 'Set up a PIN code for quick and\nsecure access to your account', 
             hasSwitch: true,
             switchValue: pinAuth,
-            onSwitchChanged: (value) {
-              setState(() {
-                pinAuth = value;
-              });
-            }
+            onSwitchChanged: _handlePinToggle,
           ),
+          if (pinAuth) ...[
+            _buildDivider(),
+            _buildSecurityItem(
+              icon: Icons.password, 
+              iconColor: primaryBlue, 
+              title: 'Change PIN', 
+              subtitle: 'Update your current PIN code', 
+              hasSwitch: false,
+              onTap: () async {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PinSetupPage(isChangingPin: true),
+                  )
+                );
+              }
+            )
+          ],
           _buildDivider(),
           _buildSecurityItem(
             icon: Icons.verified_user_outlined, 
